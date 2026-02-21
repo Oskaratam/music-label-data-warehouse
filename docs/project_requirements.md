@@ -10,8 +10,8 @@
 2. Regularly scraped worldwide charts data from 'kworb.net' (allowed by the website policy) 
 3. Relevant YouTube API data for additional monitoring of engagement 
 
-->**Data Integration**: Combine data from all sources into a user-friendly data model, with clear connection and use cases for analytical queries
-->**Scope**: Focus on the latest datasets, as well as the historical data to analyze trends in the music industry 
-->**Documentatiion**: Provide clear documentation of the data model, architecture and ready-to-use data product
-->**Final result**: Provide all the required materials for the warehouse such as initialization and DDL scripts, python scripts, ETL scripts,documentation, visualization (e.g., diagrams, models, schemas), datasets used
+->**Data Integration**: Combine data from all sources into a user-friendly data model, with clear connection and use cases for analytical queries <br>
+->**Scope**: Focus on the latest datasets, as well as the historical data to analyze trends in the music industry  <br>
+->**Documentatiion**: Provide clear documentation of the data model, architecture and ready-to-use data product  <br>
+->**Final result**: Provide all the required materials for the warehouse such as initialization and DDL scripts, python scripts, ETL scripts,  documentation, visualization (e.g., diagrams, models, schemas), datasets used
 

@@ -11,19 +11,20 @@
 ***Language*** - English
 
 ***Script names*** - `<Abbreviated layer name>_<script purpose>.<extension>`
-'Abbreviated layer name' reprsents shortened name of the data processing stage where the script is applied (e.g., bronze - brz, silver - slv, gold - gd)
+-'Abbreviated layer name' reprsents shortened name of the data processing stage where the script is applied (e.g., bronze - brz, silver - slv, gold - gd)
 Examples: brz_load_json.py, gd_ddl.sql
 
 ## Docs Conventions ##
 
 ***Visualization based docs*** - `<order>_<artifact_type>_<description>.<extension>`
-Examples - 01_architecture_layers.drawio, 03_model_star_schema.png, 02_architecture_data_flow.drawio
+-Order - level of abstraction (01 beeing the highest)
+-Examples - 01_architecture_layers.drawio, 03_model_star_schema.png, 02_architecture_data_flow.drawio
 
 ***Text based docs*** - `<descriptive name using the general naming style>.<extension>`
-Examples: model_evaluation.md, data_dictionary.md
+-Examples: model_evaluation.md, data_dictionary.md
 
 ***Standard Top-Level Files*** - `<descriptive name all caps>.<extension>`
-Examples: README.md, CONTRIBUTING.md, CHANGELOG.md
+-Examples: README.md, CONTRIBUTING.md, CHANGELOG.md
 
 ## Layer's Naming Conventions ##
 

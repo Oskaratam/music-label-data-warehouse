@@ -1,7 +1,7 @@
 # music-label-data-warehouse
 An end-to-end data engineering project building a modern data warehouse for music industry analytics, enabling strategic financial decision-making for record labels
 ## :construction: Data Architecture :construction: ##
-<img src="https://github.com/Oskaratam/music-label-data-warehouse/blob/23162e80afcb5036ff1bc735979d5c86c1848661/docs/01_architecture_layers.png" alt="drawing" width="3000" height='3000'/>
+<img src="https://github.com/Oskaratam/music-label-data-warehouse/blob/23162e80afcb5036ff1bc735979d5c86c1848661/docs/01_architecture_layers.png" alt="drawing" width="100%" height="100%"/>
 
 
 ## 📖 Project Overview ##

@@ -31,6 +31,14 @@
   - Examples: README.md, CONTRIBUTING.md, CHANGELOG.md
 
 ## Layer's Naming Conventions ##
+All control tables must start with the prefix `ctrl_`  
+Example: `ctrl_scraper_registry`  
+
+All logging tables must start with the prefix `audit_`  
+Example: `audit_artist_deletion`  
+
+All reference tables must start with the prefix `ref_`  
+Example: `ref_country_codes`  
 
 ### Bronze Layer ###
 All names must start with the source system name, and table names must clearly represent the entity  

@@ -13,7 +13,7 @@ IF OBJECT_ID('bronze.ctrl_load', 'U') IS NOT NULL
 GO
 CREATE TABLE bronze.ctrl_load (
 	load_key BIGINT IDENTITY(1, 1) PRIMARY KEY,
-	source_name NVARCHAR(255),
+	source_system NVARCHAR(255),
 	source_type NVARCHAR(50), -- Example - 'API', 'CSV', 'SCAPING'
 	load_status NVARCHAR(50),
 	target_table_name NVARCHAR(128),

@@ -15,3 +15,4 @@ TABLES = {
         }
     }
 }
+API_TRIAL_THRESHOLD = 3

@@ -22,7 +22,7 @@ class DatabaseClient:
         connection.close()
 
 
-    def _load_to_control_table():
+    def load_to_control_table(self, error_message):
         print()
         
 
@@ -70,8 +70,6 @@ class DatabaseClient:
             print(f'Connection to the database failed \n Error Message: {e}')
 
 
-client = DatabaseClient()
-print(client.get_watermark_value("SAP_ERP"))
 
 
 

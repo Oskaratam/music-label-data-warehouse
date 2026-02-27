@@ -15,3 +15,5 @@ TABLES = {
         }
     }
 }
+API_TRIAL_THRESHOLD = 3
+YOUTUBE_API_PLAYLIST_SEARCH_PHRASES = ["world hits of 2026"]

@@ -30,7 +30,8 @@ class BaseEtl():
                     print(f'Error occured while loading: {error}')
                     print('Number of trials exceeded the allowed threshold')
 
-    def is_valid_date(self, string: str | None) -> bool:
+    @classmethod
+    def is_valid_date(cls, string: str | None) -> bool:
         if not string: return False
         try:
             datetime.fromisoformat(string)

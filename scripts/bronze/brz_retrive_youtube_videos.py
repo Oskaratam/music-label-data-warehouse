@@ -40,36 +40,34 @@ class YoutubeVideosEtl(BaseEtl):
             "maxResults" : 50,
             "key" : self.API_KEY 
         }
-        is_valid_watermark = self.is_valid_date(watermark)
+
+        is_valid_watermark = BaseEtl.is_valid_date(watermark)
         watermark_dt: datetime | None = datetime.fromisoformat(watermark) if is_valid_watermark else None
 
+        if(not self.is_valid_date(watermark)):
+           print("!!!!!!!!!!!!!!WARNING!!!!!!!!!!!!!!!!!!")
+           print("Loading videos without watermark value")
+           print()
 
-        if(self.is_valid_date(watermark)):
-            watermark_datetime = datetime.fromisoformat(watermark)
-
-            for id in playlist_ids:
+        for id in playlist_ids:
                 playlist_items_parameters["playlistId"] = id
                 response = requests.get(YOUTUBE_PLAYLIST_ITEMS_URL, playlist_items_parameters)
-                videos.extend(video["id"] for video in response.json()["items"]
+                if(self.is_valid_date(watermark)):
+                    watermark_datetime = datetime.fromisoformat(watermark)
+                    videos.extend(video["snippet"]["resourceId"]["videoId"] for video in response.json()["items"]
                             if datetime.fromisoformat(
                                 video["snippet"]["publishedAt"]
                                 ) > watermark_datetime
                             )
-        else:
-            print("!!!!!!!!!!!!!!WARNING!!!!!!!!!!!!!!!!!!")
-            print("Loading videos without watermark value")
-            for id in playlist_ids:
-                playlist_items_parameters["playlistId"] = id
-                response = requests.get(YOUTUBE_PLAYLIST_ITEMS_URL,
-                                         playlist_items_parameters
-                                        )
-                videos.extend(video for video in response.json()["items"])
+                else:
+                    videos.extend(video["snippet"]["resourceId"]["videoId"] for video in response.json()["items"])
         print(videos)
         return videos
     
+    def _get_video_details(self, video_ids: list[str]):
+        print()
     
-
-
+    
 if __name__ == '__main__':
     etl = YoutubeVideosEtl("youtube_api")
     etl.run()

@@ -4,17 +4,20 @@ import requests
 from datetime import datetime
 from scripts.utils.base_etl import BaseEtl 
 from scripts.utils.db_client import DatabaseClient
-from scripts.utils.db_config import YOUTUBE_API_PLAYLIST_SEARCH_PHRASES, YOUTUBE_PLAYLIST_ITEMS_URL, YOUTUBE_SEARCH_URL
+from scripts.utils.etl_config import (YOUTUBE_API_PLAYLIST_SEARCH_PHRASES,
+                                    YOUTUBE_PLAYLIST_ITEMS_URL,
+                                    YOUTUBE_SEARCH_URL,
+                                    YOUTUBE_VIDEO_DETAILS_URL)
 load_dotenv('../../.env')
 
 class YoutubeVideosEtl(BaseEtl):
-
-    def __init__(self, source_system: str,  db_client: DatabaseClient | None = None):
+    def __init__(self, source_system: str = 'youtube_api',  db_client: DatabaseClient | None = None):
         super().__init__(source_system, db_client)
         self.API_KEY = os.getenv("YOUTUBE_API_KEY")
     
     def _get_data(self,  watermark: str):
         playlist_videos = self._get_playlist_items(self._get_relevant_playlists(), watermark)
+        return self._get_video_details(playlist_videos)
           
     def _get_relevant_playlists(self) -> list[str]:
         playlist_parameters = {
@@ -26,9 +29,9 @@ class YoutubeVideosEtl(BaseEtl):
             "key" : self.API_KEY 
         }
         response = requests.get(YOUTUBE_SEARCH_URL, playlist_parameters)
-        print(response.json())
         playlist_ids = [item["id"]["playlistId"] for item in response.json()['items']]
-        print(playlist_ids)
+        print("!Playlists Loaded Successfully!")
+        print("--------------------------------")
         return playlist_ids
     
     def _get_playlist_items(self, playlist_ids: list[str], watermark: str) -> list[str]:
@@ -61,14 +64,30 @@ class YoutubeVideosEtl(BaseEtl):
                             )
                 else:
                     videos.extend(video["snippet"]["resourceId"]["videoId"] for video in response.json()["items"])
-        print(videos)
+        print("!Playlist Items Loaded Successfully!")
+        print("--------------------------------")
         return videos
     
-    def _get_video_details(self, video_ids: list[str]):
-        print()
-    
-    
+    def _get_video_details(self, video_ids: list[str]) -> list[dict]:
+        video_details = []
+        video_details_params = {
+            "id" : "",
+            "part" : "snippet,contentDetails,statistics,topicDetails",
+            "fields" : "items(snippet(publishedAt,title,categoryId),contentDetails(duration),statistics,topicDetails)",
+            "key" : self.API_KEY 
+        }
+        
+        for i in range(0, len(video_ids), 50):
+            batch_ids = video_ids[i:i+50]
+            video_details_params["id"] = ','.join(batch_ids)
+            response = requests.get(YOUTUBE_VIDEO_DETAILS_URL, video_details_params)
+            video_details.extend(response.json()['items'])
+        print("!Video Details Loaded Successfully!")
+        print("--------------------------------")
+        return video_details
+      
+
 if __name__ == '__main__':
-    etl = YoutubeVideosEtl("youtube_api")
+    etl = YoutubeVideosEtl()
     etl.run()
     

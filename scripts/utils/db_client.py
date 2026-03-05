@@ -14,7 +14,7 @@ class DatabaseClient:
         self.TABLES = db_config.TABLES
 
     
-    def load_to_db(self, raw_data, source_system, source_url=None):
+    def load_to_db(self, raw_data : str, source_system : str):
         connection = self._connect_to_db()
         cursor = connection.cursor()
 

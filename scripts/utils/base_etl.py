@@ -1,8 +1,9 @@
 import time
 import requests 
+import json
 from datetime import datetime
 from scripts.utils.db_client import DatabaseClient
-from scripts.utils.db_config import API_TRIAL_THRESHOLD
+from scripts.utils.etl_config import API_TRIAL_THRESHOLD
 
 class BaseEtl():
 
@@ -15,11 +16,11 @@ class BaseEtl():
         watermark_value = self.database.get_watermark_value(self.source_system)
         while(self._load_tries_count < API_TRIAL_THRESHOLD):
             try:
-                json_data = self._get_data(watermark_value)
-                ##self.database.load_to_db(json_data)
+                raw_data = json.dumps(self._get_data(watermark_value))
+                self.database.load_to_db(raw_data, self.source_system)
                 print('Data loaded successfully')
                 return
-            except (ConnectionError, TimeoutError, KeyError, requests.HTTPError) as error:
+            except (ConnectionError, TimeoutError, KeyError, requests.HTTPError, Exception) as error:
                 print(f'Error occured while loading: {error}')
                 self._load_tries_count += 1
                 self.save_failed_load(str(error))
@@ -43,6 +44,6 @@ class BaseEtl():
     def save_failed_load(self, error_message: str):
         self.database.load_to_control_table(error_message)
 
-    def _get_data(self,  watermark: str):
-        return
+    def _get_data(self,  watermark: str) -> list[dict]:
+        return [{}]
     

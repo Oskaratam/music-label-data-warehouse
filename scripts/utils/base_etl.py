@@ -1,25 +1,26 @@
 import time
 import requests 
+import json
+from datetime import datetime
 from scripts.utils.db_client import DatabaseClient
-from scripts.utils.db_config import API_TRIAL_THRESHOLD
+from scripts.utils.etl_config import API_TRIAL_THRESHOLD
 
 class BaseEtl():
 
-    def __init__(self, source_system, url, db_client=None):
+    def __init__(self, source_system: str, data_category: str, db_client: DatabaseClient | None = None):
         self.database = db_client or DatabaseClient()
         self._load_tries_count = 0
         self.source_system = source_system
-        self.url = url
+        self.data_category = data_category
 
     def run(self):
         watermark_value = self.database.get_watermark_value(self.source_system)
-        while(self._load_tries_count < API_TRIAL_THRESHOLD):
+        raw_data = [{}]
+        while(self._load_tries_count < API_TRIAL_THRESHOLD ):
             try:
-                json_data = self._get_data(self.url, watermark_value)
-                ##self.database.load_to_db(json_data)
-                print('Data loaded successfully')
-                return
-            except (ConnectionError, TimeoutError, requests.HTTPError) as error:
+                raw_data = self._get_data(watermark_value)
+                break
+            except (ConnectionError, TimeoutError, KeyError, requests.HTTPError, Exception) as error:
                 print(f'Error occured while loading: {error}')
                 self._load_tries_count += 1
                 self.save_failed_load(str(error))
@@ -29,13 +30,22 @@ class BaseEtl():
                 else:
                     print(f'Error occured while loading: {error}')
                     print('Number of trials exceeded the allowed threshold')
+                    return
+        self.database.load_to_bronze(raw_data, self.source_system, self.data_category) 
 
+    @classmethod
+    def is_valid_date(cls, string: str | None) -> bool:
+        if not string: return False
+        try:
+            datetime.fromisoformat(string)
+            return True
+        except ValueError:
+            print(f"Value '{string}' is not a valid ISO format datetime")
+            return False 
 
-    def save_failed_load(self, error_message):
+    def save_failed_load(self, error_message: str):
         self.database.load_to_control_table(error_message)
 
-    def _get_data(self, url, watermark):
-        response = requests.get(url)
-        response.raise_for_status()
-        return response.json()
+    def _get_data(self,  watermark: str) -> list[dict]:
+        return [{}]
     

@@ -21,6 +21,7 @@ class BaseEtl():
         while(self._load_tries_count < API_TRIAL_THRESHOLD ):
             data : dict = self._get_data(watermark_value)
 
+    
             if(data['metadata']['status'] == "Success"):
                 self.database.load_to_bronze(data["raw_data"], self.source_system, self.data_category) 
                 self.database.load_to_control_table(data["metadata"])
@@ -50,5 +51,5 @@ class BaseEtl():
 
     @with_metadata
     def _get_data(self,  watermark: str) -> dict:
-        return {}
+        return {"raw_data" : [], "new_watermark": None}
     
